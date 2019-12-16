@@ -8,13 +8,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - name: Ensure can write in repo
+        run: chmod ugo+w -R pkg
+      - name: Clone Gitlab.com caspr-io/root
+        run: git clone https://gitlab-ci-token:${GITLAB_PAT}@gitlab.com/caspr-io/root ../root
+        env:
+          GITLAB_PAT: ${{secrets.GITLAB_PAT}}
       - name: Make docker image
         run: make build
       - name: Docker Login
         uses: azure/docker-login@v1
         with:
-          login-server: docker.pkg.github.com
-          username: $GITHUB_ACTOR
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: hierynomus
+          password: ${{ secrets.DOCKER_HUB_PAT }}
       - name: Push docker image
         run: make docker/push
