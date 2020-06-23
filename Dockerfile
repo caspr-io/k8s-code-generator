@@ -5,6 +5,7 @@ RUN apt-get update && \
   apt-get install -y \
   git
 
+ENV GO111MODULE=on
 # Code generator stuff
 RUN wget https://github.com/kubernetes/code-generator/archive/kubernetes-${CODEGEN_VERSION}.tar.gz && \
   mkdir -p /go/src/k8s.io/code-generator/ && \
@@ -21,11 +22,7 @@ RUN wget https://github.com/kubernetes/code-generator/archive/kubernetes-${CODEG
   tar zxvf kubernetes-${CODEGEN_VERSION}.tar.gz --strip 1 -C /go/src/k8s.io/api/ && \
   rm kubernetes-${CODEGEN_VERSION}.tar.gz && \
   \
-  wget https://github.com/kubernetes/klog/archive/v2.0.0.tar.gz && \
-  mkdir -p /go/src/k8s.io/klog/v2 && \
-  tar zxvf v2.0.0.tar.gz --strip 1 -C /go/src/k8s.io/klog/v2 && \
-  rm v2.0.0.tar.gz && \
-  \
+  go get k8s.io/klog/v2 && \
   go get k8s.io/kube-openapi/cmd/openapi-gen
 
 
